@@ -13,7 +13,8 @@ caseflow/
 ├── backend/
 ├── frontend/
 ├── docs/
-│   └── CASEFLOW_PROJECT.md
+│   ├── CASEFLOW_PROJECT.md
+│   └── DAY_2_PROMPT.md
 ├── docker-compose.yml
 ├── README.md
 ├── AGENTS.md
@@ -21,6 +22,15 @@ caseflow/
 ```
 
 The structure should remain simple: one Spring Boot backend, one React frontend, one PostgreSQL service, and project documentation.
+
+## Sprint Task Workflow
+
+- Use one Codex task per sprint day.
+- Name tasks `Day 1`, `Day 2`, through `Day 7`.
+- Every new task begins by reading `AGENTS.md` and this document, then inspecting Git status and recent commits.
+- The repository is the durable handoff between daily tasks.
+- A new day begins with a scope proposal and requires explicit approval before implementation.
+- End each completed day with synchronized documentation, verification, a clean Git state, and a pushed commit.
 
 ## Confirmed Technology Choices
 

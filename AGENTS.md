@@ -22,6 +22,15 @@ Read `docs/CASEFLOW_PROJECT.md` before making project-level decisions. Treat it 
 - Verify changes in proportion to their risk.
 - Keep `README.md` and `docs/CASEFLOW_PROJECT.md` synchronized at meaningful milestones.
 
+## Daily Task Handoff
+
+- Use a separate Codex task for each sprint day.
+- Name each task `Day 1`, `Day 2`, and so on, matching the active sprint day.
+- At the start of a new daily task, read this file and `docs/CASEFLOW_PROJECT.md`, inspect Git status and recent commits, and confirm the previous day's milestone before proposing changes.
+- Treat repository documentation and committed code as the durable handoff between tasks; do not rely on prior conversation history being available.
+- At the end of each day, synchronize project documentation, verify the approved completion criterion, commit and push the work, and leave the repository clean.
+- Do not begin implementation for a new day until that day's scope is explicitly approved.
+
 ## Environment
 
 - Use Java 25 and Maven for the backend.
