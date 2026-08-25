@@ -13,12 +13,31 @@ export interface CaseItem {
   assignedUser: AssignedUser
 }
 
+export class ApiError extends Error {
+  status: number
+
+  constructor(message: string, status: number) {
+    super(message)
+    this.status = status
+  }
+}
+
 export async function getCases(): Promise<CaseItem[]> {
   const response = await fetch('/api/cases')
 
   if (!response.ok) {
-    throw new Error(`Unable to load cases (${response.status})`)
+    throw new ApiError(`Unable to load cases (${response.status})`, response.status)
   }
 
   return response.json() as Promise<CaseItem[]>
+}
+
+export async function getCase(caseId: number): Promise<CaseItem> {
+  const response = await fetch(`/api/cases/${caseId}`)
+
+  if (!response.ok) {
+    throw new ApiError(`Unable to load case (${response.status})`, response.status)
+  }
+
+  return response.json() as Promise<CaseItem>
 }

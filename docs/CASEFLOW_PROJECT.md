@@ -147,6 +147,51 @@ React
 
 Do not begin Day 2 until the user explicitly approves it.
 
+## Day 2 Approved Scope
+
+Day 2 adds a read-only case details flow. A user can select a case from the
+existing list, navigate to `/cases/:caseId`, and see the case title, status,
+identifier, and assigned user.
+
+### API
+
+- `GET /api/cases/{id}`: return one case and its assigned user.
+- Return HTTP `404` when the requested case does not exist.
+- Reuse the Day 1 response shape; do not change the database schema.
+
+### Completion Criterion
+
+Day 2 is complete only when this flow works end to end:
+
+```text
+User selects a case
+  -> React navigates to /cases/:caseId
+  -> GET /api/cases/{id}
+  -> Spring Boot loads the case from PostgreSQL
+  -> JSON returns the case and assigned user
+  -> React renders the case details
+```
+
+The frontend must also show clear loading and error or not-found states and
+provide navigation back to the case list.
+
+### Day 2 Implementation Boundaries
+
+- Add the single-case backend lookup, endpoint, `404` handling, and focused tests.
+- Add the typed frontend request, details route and page, list-to-detail link,
+  and styling consistent with the existing interface.
+- Do not add forms, mutations, dependencies, database migrations, or later-day
+  features.
+
+### Day 2 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Add and test `GET /api/cases/{id}` with HTTP `404` handling.
+3. [x] Add the typed single-case frontend request.
+4. [x] Add list-to-detail navigation and the case details page.
+5. [x] Verify loading, success, and not-found behavior.
+6. [x] Verify the full Day 2 flow and synchronize documentation.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -165,4 +210,11 @@ Do not begin Day 2 until the user explicitly approves it.
 - `GET /api/cases` returns the three seeded cases with their assigned users.
 - React fetches the endpoint through the Vite development proxy and renders three case cards.
 - Backend compilation, frontend lint/build, direct API checks, and browser rendering have been verified.
-- Day 2 has not started and requires explicit approval.
+- Day 2 is complete.
+- `GET /api/cases/{id}` returns one case with its assigned user and returns
+  HTTP `404` for a missing case.
+- React links each case card to `/cases/:caseId`, fetches that individual case
+  with TanStack Query, and renders loading, success, and not-found states.
+- Backend tests, frontend lint/build, direct API checks, list-to-detail browser
+  navigation, missing-case behavior, and visual rendering have been verified.
+- Day 3 has not started and requires explicit approval.

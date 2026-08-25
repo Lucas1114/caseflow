@@ -10,7 +10,10 @@ Day 1 is complete. The first vertical slice is verified end to end:
 React -> GET /api/cases -> Spring Boot -> PostgreSQL -> JSON -> React rendering
 ```
 
-The current application displays seeded cases and each case's assigned user. Day 2 has not started.
+The current application displays seeded cases and each case's assigned user.
+Day 2 is complete. Each case links to a read-only details page at
+`/cases/:caseId`, backed by `GET /api/cases/{id}`. Missing cases return HTTP
+`404` and display a clear not-found state in React.
 
 ## Technology
 
@@ -77,6 +80,7 @@ The API can also be checked directly:
 
 ```bash
 curl http://localhost:8080/api/cases
+curl http://localhost:8080/api/cases/1
 ```
 
 ## Development Checks

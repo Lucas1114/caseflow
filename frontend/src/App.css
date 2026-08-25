@@ -60,6 +60,26 @@
   line-height: 1.4;
 }
 
+.case-card__link,
+.back-link,
+.state-message__link {
+  color: #2454c6;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.case-card__link {
+  display: inline-block;
+  margin: -14px 0 24px;
+  font-size: 0.86rem;
+}
+
+.case-card__link:hover,
+.back-link:hover,
+.state-message__link:hover {
+  text-decoration: underline;
+}
+
 .case-id {
   color: #8490a4;
   font-size: 0.78rem;
@@ -155,9 +175,66 @@
   cursor: pointer;
 }
 
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+}
+
+.case-details {
+  overflow: hidden;
+  border: 1px solid #e3e7ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgb(28 39 61 / 6%);
+}
+
+.case-details__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 34px;
+}
+
+.case-details__heading h1 {
+  max-width: 720px;
+  margin: 0;
+  color: #172033;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.case-details__section {
+  padding: 28px 34px 34px;
+  border-top: 1px solid #edf0f5;
+}
+
+.case-details__section h2 {
+  margin: 0 0 18px;
+  color: #283249;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.case-details__assignee {
+  padding-top: 0;
+  border-top: 0;
+}
+
 @media (max-width: 600px) {
   .app-shell {
     width: min(100% - 28px, 1120px);
     padding: 48px 0;
+  }
+
+  .case-details__heading {
+    flex-direction: column;
+  }
+
+  .case-details__heading,
+  .case-details__section {
+    padding: 24px;
   }
 }

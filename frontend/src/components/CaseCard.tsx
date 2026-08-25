@@ -1,4 +1,5 @@
 import type { CaseItem, CaseStatus } from '../api/cases'
+import { Link } from 'react-router-dom'
 
 interface CaseCardProps {
   caseItem: CaseItem
@@ -22,6 +23,10 @@ export function CaseCard({ caseItem }: CaseCardProps) {
       </div>
 
       <h2>{caseItem.title}</h2>
+
+      <Link className="case-card__link" to={`/cases/${caseItem.id}`}>
+        View details
+      </Link>
 
       <div className="assignee">
         <span className="assignee__avatar" aria-hidden="true">
