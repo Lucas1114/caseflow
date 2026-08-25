@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Visual Studio Code
+.vscode/
+
+# Java and Maven
+backend/target/
+*.class
+*.log
+
+# Node and Vite
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Test and coverage output
+coverage/
+
+# Temporary files
+*.tmp
+*.swp
+*~
