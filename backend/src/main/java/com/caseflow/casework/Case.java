@@ -50,4 +50,8 @@ public class Case {
     public User getAssignedUser() {
         return assignedUser;
     }
+
+    public void updateStatus(CaseStatus status) {
+        this.status = status;
+    }
 }

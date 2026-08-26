@@ -223,6 +223,55 @@
   border-top: 0;
 }
 
+.status-form {
+  max-width: 480px;
+}
+
+.status-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #657087;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.status-form__controls {
+  display: flex;
+  gap: 12px;
+}
+
+.status-form select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #cfd6e2;
+  border-radius: 8px;
+  color: #283249;
+  background: #ffffff;
+}
+
+.status-form button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #3662d8;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.status-form button:disabled,
+.status-form select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.status-form__error {
+  margin: 10px 0 0;
+  color: #9d2929;
+  font-size: 0.82rem;
+}
+
 @media (max-width: 600px) {
   .app-shell {
     width: min(100% - 28px, 1120px);
@@ -236,5 +285,10 @@
   .case-details__heading,
   .case-details__section {
     padding: 24px;
+  }
+
+  .status-form__controls {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

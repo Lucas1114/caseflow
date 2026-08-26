@@ -14,6 +14,9 @@ The current application displays seeded cases and each case's assigned user.
 Day 2 is complete. Each case links to a read-only details page at
 `/cases/:caseId`, backed by `GET /api/cases/{id}`. Missing cases return HTTP
 `404` and display a clear not-found state in React.
+Day 3 is complete. A user can update a case's workflow status from the details
+page. The change is persisted through `PATCH /api/cases/{id}/status`, and the
+details and case list views remain synchronized.
 
 ## Technology
 
@@ -81,6 +84,10 @@ The API can also be checked directly:
 ```bash
 curl http://localhost:8080/api/cases
 curl http://localhost:8080/api/cases/1
+curl -X PATCH \
+  -H 'Content-Type: application/json' \
+  -d '{"status":"IN_PROGRESS"}' \
+  http://localhost:8080/api/cases/1/status
 ```
 
 ## Development Checks

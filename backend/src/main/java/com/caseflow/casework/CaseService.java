@@ -32,6 +32,15 @@ public class CaseService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Case not found"));
     }
 
+    @Transactional
+    public CaseResponse updateStatus(Long id, CaseStatus status) {
+        Case caseItem = caseRepository.findByIdWithAssignedUser(id)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Case not found"));
+
+        caseItem.updateStatus(status);
+        return toResponse(caseItem);
+    }
+
     private CaseResponse toResponse(Case caseItem) {
         User assignedUser = caseItem.getAssignedUser();
 

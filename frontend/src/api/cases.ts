@@ -41,3 +41,22 @@ export async function getCase(caseId: number): Promise<CaseItem> {
 
   return response.json() as Promise<CaseItem>
 }
+
+export async function updateCaseStatus(
+  caseId: number,
+  status: CaseStatus,
+): Promise<CaseItem> {
+  const response = await fetch(`/api/cases/${caseId}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  })
+
+  if (!response.ok) {
+    throw new ApiError(`Unable to update case (${response.status})`, response.status)
+  }
+
+  return response.json() as Promise<CaseItem>
+}

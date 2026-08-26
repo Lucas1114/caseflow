@@ -192,6 +192,54 @@ provide navigation back to the case list.
 5. [x] Verify loading, success, and not-found behavior.
 6. [x] Verify the full Day 2 flow and synchronize documentation.
 
+## Day 3 Approved Scope
+
+Day 3 adds one focused mutation to the case details page. A user can select a
+new workflow status and save it to PostgreSQL.
+
+### API
+
+- `PATCH /api/cases/{id}/status`: validate and persist a case status change.
+- Accept a JSON body containing one `status` value from the existing
+  `CaseStatus` enum.
+- Return the existing `CaseResponse` shape after the update.
+- Return HTTP `400` for a missing or invalid status and HTTP `404` when the case
+  does not exist.
+
+### Completion Criterion
+
+Day 3 is complete only when this flow works end to end:
+
+```text
+User selects a new status on /cases/:caseId
+  -> React sends PATCH /api/cases/{id}/status
+  -> Spring Boot validates and persists the status
+  -> PostgreSQL stores the change
+  -> React displays the updated status
+  -> returning to /cases shows the same updated status
+```
+
+The frontend must show a clear saving state and a useful mutation error. The
+case details and case list query data must remain synchronized after success.
+
+### Day 3 Implementation Boundaries
+
+- Add the status request, transactional update, endpoint, and focused tests.
+- Add a typed frontend mutation and a native status select with an explicit
+  save action on the existing details page.
+- Reuse the current schema, response shape, status enum, and dependencies.
+- Do not add editing for other fields, general-purpose forms, optimistic
+  updates, activity history, bulk actions, or later-day features.
+
+### Day 3 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Add and test `PATCH /api/cases/{id}/status`.
+3. [x] Add the typed frontend status mutation.
+4. [x] Add the status control and mutation states to the details page.
+5. [x] Verify persistence and list/detail cache synchronization.
+6. [x] Verify regressions and synchronize documentation.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -217,4 +265,11 @@ provide navigation back to the case list.
   with TanStack Query, and renders loading, success, and not-found states.
 - Backend tests, frontend lint/build, direct API checks, list-to-detail browser
   navigation, missing-case behavior, and visual rendering have been verified.
-- Day 3 has not started and requires explicit approval.
+- Day 3 is complete.
+- `PATCH /api/cases/{id}/status` validates and persists an existing workflow
+  status and returns HTTP `400` or `404` for invalid requests.
+- React provides a typed status control on the details page, displays saving
+  and error states, and synchronizes the details and list query data after a
+  successful update.
+- Backend tests, frontend lint/build, direct PostgreSQL-backed API checks, and
+  list-to-detail browser behavior have been verified.
