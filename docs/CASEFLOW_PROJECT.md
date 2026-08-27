@@ -240,6 +240,56 @@ case details and case list query data must remain synchronized after success.
 5. [x] Verify persistence and list/detail cache synchronization.
 6. [x] Verify regressions and synchronize documentation.
 
+## Day 4 Approved Scope
+
+Day 4 adds case activity notes to the case details page. A user can record a
+short operational note and see the case's activity history newest first.
+
+### API
+
+- `GET /api/cases/{id}/activities`: return the case's activities newest first.
+- `POST /api/cases/{id}/activities`: validate and persist one activity note.
+- Accept a JSON body containing a nonblank `note` of at most 1,000 characters.
+- Return HTTP `400` for a missing, blank, or oversized note and HTTP `404` when
+  the case does not exist.
+
+### Completion Criterion
+
+Day 4 is complete only when this flow works end to end:
+
+```text
+User enters an activity note on /cases/:caseId
+  -> React sends POST /api/cases/{id}/activities
+  -> Spring Boot validates and persists the activity
+  -> PostgreSQL stores it against the case
+  -> React clears the form and displays the new activity
+  -> reloading the details page shows the same activity
+```
+
+The frontend must show activity loading, empty, saving, success, and useful
+error states. Activities are displayed newest first.
+
+### Day 4 Implementation Boundaries
+
+- Add the `case_activities` table through a new Flyway migration.
+- Add a small activity entity, repository, service, explicit API contracts, and
+  focused tests for listing, creation, validation, ordering, and missing cases.
+- Add typed frontend activity requests, a timeline, and a controlled native
+  textarea form on the existing details page.
+- Reuse the current dependencies and preserve all Day 1 through Day 3 behavior.
+- Do not add activity editing or deletion, attachments, rich text, automatic
+  status events, authors, threaded comments, pagination, general case editing,
+  authentication, or later-day features.
+
+### Day 4 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Add the activity migration and persistence model.
+3. [x] Add and test the activity list and create endpoints.
+4. [x] Add typed frontend activity requests and timeline.
+5. [x] Add the note form and mutation states.
+6. [x] Verify persistence, ordering, regressions, and synchronize documentation.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -273,3 +323,13 @@ case details and case list query data must remain synchronized after success.
   successful update.
 - Backend tests, frontend lint/build, direct PostgreSQL-backed API checks, and
   list-to-detail browser behavior have been verified.
+- Day 4 is complete.
+- Flyway creates and seeds `case_activities`, linked to cases with a foreign
+  key and indexed for newest-first retrieval.
+- `GET /api/cases/{id}/activities` returns activity history and
+  `POST /api/cases/{id}/activities` validates and persists a new note.
+- React displays activity loading, empty, error, saving, and success states on
+  the case details page and immediately adds a saved note to the timeline.
+- Backend tests, frontend lint/build, direct PostgreSQL-backed API checks,
+  browser creation, reload persistence, empty state, and list navigation have
+  been verified.

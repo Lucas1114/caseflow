@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
+import { CaseActivitySection } from '../components/CaseActivitySection'
 import {
   ApiError,
   getCase,
@@ -140,6 +141,8 @@ function CaseDetails({ caseItem }: CaseDetailsProps) {
           </div>
         </div>
       </section>
+
+      <CaseActivitySection caseId={caseItem.id} />
     </article>
   )
 }

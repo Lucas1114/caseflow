@@ -13,6 +13,12 @@ export interface CaseItem {
   assignedUser: AssignedUser
 }
 
+export interface CaseActivity {
+  id: number
+  note: string
+  createdAt: string
+}
+
 export class ApiError extends Error {
   status: number
 
@@ -59,4 +65,39 @@ export async function updateCaseStatus(
   }
 
   return response.json() as Promise<CaseItem>
+}
+
+export async function getCaseActivities(caseId: number): Promise<CaseActivity[]> {
+  const response = await fetch(`/api/cases/${caseId}/activities`)
+
+  if (!response.ok) {
+    throw new ApiError(
+      `Unable to load case activity (${response.status})`,
+      response.status,
+    )
+  }
+
+  return response.json() as Promise<CaseActivity[]>
+}
+
+export async function createCaseActivity(
+  caseId: number,
+  note: string,
+): Promise<CaseActivity> {
+  const response = await fetch(`/api/cases/${caseId}/activities`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ note }),
+  })
+
+  if (!response.ok) {
+    throw new ApiError(
+      `Unable to save case activity (${response.status})`,
+      response.status,
+    )
+  }
+
+  return response.json() as Promise<CaseActivity>
 }

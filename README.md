@@ -17,6 +17,9 @@ Day 2 is complete. Each case links to a read-only details page at
 Day 3 is complete. A user can update a case's workflow status from the details
 page. The change is persisted through `PATCH /api/cases/{id}/status`, and the
 details and case list views remain synchronized.
+Day 4 is complete. A user can add a persistent activity note from the case
+details page and see the case's activity history newest first. The form and
+timeline provide clear loading, empty, saving, success, and error states.
 
 ## Technology
 
@@ -84,10 +87,15 @@ The API can also be checked directly:
 ```bash
 curl http://localhost:8080/api/cases
 curl http://localhost:8080/api/cases/1
+curl http://localhost:8080/api/cases/1/activities
 curl -X PATCH \
   -H 'Content-Type: application/json' \
   -d '{"status":"IN_PROGRESS"}' \
   http://localhost:8080/api/cases/1/status
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{"note":"Customer supplied the missing document."}' \
+  http://localhost:8080/api/cases/1/activities
 ```
 
 ## Development Checks

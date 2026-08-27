@@ -272,6 +272,121 @@
   font-size: 0.82rem;
 }
 
+.activity-form {
+  max-width: 680px;
+  margin-bottom: 30px;
+}
+
+.activity-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: #657087;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.activity-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid #cfd6e2;
+  border-radius: 8px;
+  color: #283249;
+  background: #ffffff;
+  line-height: 1.5;
+}
+
+.activity-form textarea:focus {
+  border-color: #3662d8;
+  outline: 3px solid rgb(54 98 216 / 15%);
+}
+
+.activity-form__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.activity-form__footer span {
+  color: #8490a4;
+  font-size: 0.76rem;
+}
+
+.activity-form button,
+.activity-state button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #3662d8;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.activity-form button:disabled,
+.activity-form textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.activity-form__message {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+}
+
+.activity-form__message--error,
+.activity-state--error {
+  color: #9d2929;
+}
+
+.activity-form__message--success {
+  color: #16704a;
+}
+
+.activity-state {
+  margin: 0;
+  padding: 20px;
+  border-radius: 10px;
+  color: #657087;
+  background: #f7f9fc;
+}
+
+.activity-state p {
+  margin: 0 0 12px;
+}
+
+.activity-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activity-list li {
+  padding: 18px 20px;
+  border-left: 3px solid #b8c8ef;
+  border-radius: 0 10px 10px 0;
+  background: #f7f9fc;
+}
+
+.activity-list p {
+  margin: 0;
+  color: #283249;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.activity-list time {
+  display: block;
+  margin-top: 8px;
+  color: #7a8599;
+  font-size: 0.76rem;
+}
+
 @media (max-width: 600px) {
   .app-shell {
     width: min(100% - 28px, 1120px);
