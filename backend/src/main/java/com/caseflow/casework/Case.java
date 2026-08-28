@@ -54,4 +54,8 @@ public class Case {
     public void updateStatus(CaseStatus status) {
         this.status = status;
     }
+
+    public void updateAssignee(User assignedUser) {
+        this.assignedUser = assignedUser;
+    }
 }

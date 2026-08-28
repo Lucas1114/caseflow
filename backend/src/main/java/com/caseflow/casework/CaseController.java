@@ -37,4 +37,12 @@ public class CaseController {
     ) {
         return caseService.updateStatus(id, request.status());
     }
+
+    @PatchMapping("/{id}/assignee")
+    public CaseResponse updateAssignee(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateCaseAssigneeRequest request
+    ) {
+        return caseService.updateAssignee(id, request.assignedUserId());
+    }
 }

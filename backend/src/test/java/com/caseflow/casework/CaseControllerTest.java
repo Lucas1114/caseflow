@@ -103,7 +103,7 @@ class CaseControllerTest {
         private static CaseResponse caseResponse;
 
         StubCaseService() {
-            super(null);
+            super(null, null);
         }
 
         @Override

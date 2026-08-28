@@ -80,6 +80,36 @@ export async function getCaseActivities(caseId: number): Promise<CaseActivity[]>
   return response.json() as Promise<CaseActivity[]>
 }
 
+export async function getUsers(): Promise<AssignedUser[]> {
+  const response = await fetch('/api/users')
+
+  if (!response.ok) {
+    throw new ApiError(`Unable to load users (${response.status})`, response.status)
+  }
+
+  return response.json() as Promise<AssignedUser[]>
+}
+
+export async function updateCaseAssignee(
+  caseId: number,
+  assignedUserId: number,
+): Promise<CaseItem> {
+  const response = await fetch(`/api/cases/${caseId}/assignee`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ assignedUserId }),
+  })
+
+  if (!response.ok) {
+    const message = response.status === 404
+      ? 'The case or selected user no longer exists. Reload the page and try again.'
+      : `Unable to save assignee (${response.status}). Please try again.`
+    throw new ApiError(message, response.status)
+  }
+
+  return response.json() as Promise<CaseItem>
+}
+
 export async function createCaseActivity(
   caseId: number,
   note: string,

@@ -290,6 +290,72 @@ error states. Activities are displayed newest first.
 5. [x] Add the note form and mutation states.
 6. [x] Verify persistence, ordering, regressions, and synchronize documentation.
 
+## Day 5 Approved Scope
+
+Day 5 adds case reassignment to another existing user from the details page.
+
+### API
+
+- `GET /api/users`: return existing users with id, name, and email.
+- `PATCH /api/cases/{id}/assignee`: accept a non-null, positive
+  `assignedUserId` and return the existing `CaseResponse` after persistence.
+- Return HTTP `400` for an invalid request and `404` for a missing case or user.
+
+### Completion Criterion
+
+```text
+User selects another assignee on /cases/:caseId
+  -> React sends PATCH /api/cases/{id}/assignee
+  -> Spring Boot validates the case and user
+  -> PostgreSQL updates cases.assigned_user_id
+  -> React displays the new assignee
+  -> the case list and a reloaded details page show the same assignee
+```
+
+The frontend must show user loading, saving, success, and useful error states.
+Saving is disabled when unchanged or pending. Update the detail query cache
+and invalidate the case list after success.
+
+### Day 5 Implementation Boundaries
+
+- Add minimal user listing contracts, controller, service, and repository.
+- Add the validated assignee request, transactional update, and focused tests.
+- Add typed frontend requests and a controlled native select with explicit save.
+- Reuse the existing foreign key, seed users, dependencies, and architecture;
+  no database migration is needed. PostgreSQL remains Docker Compose-only.
+- Preserve Day 1 through Day 4 behavior. Do not add user management,
+  unassignment, multiple assignees, teams, assignment history, automatic activity
+  entries, notifications, queues, search/filtering/sorting, authentication,
+  general case editing, optimistic updates, or any Day 6 work.
+
+### Day 5 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Implement and test user listing and reassignment API.
+3. [x] Add typed requests, assignee control, and cache synchronization.
+4. [x] Verify API, PostgreSQL persistence, browser states, and regressions.
+5. [x] Synchronize documentation for the Day 5 commit and push handoff.
+
+### Day 5 Verification (2026-08-28)
+
+- 19 backend tests pass. New tests exercise real user/case services with
+  mocked repositories, including reassignment, unchanged assignments, field
+  preservation, invalid IDs, missing users/cases, and user listing/empty data.
+- Frontend lint and production build pass; no frontend test dependency added.
+- Docker Compose PostgreSQL and Flyway confirm schema version 2; no migration.
+- The running API returns existing users and expected `400`/`404` responses.
+- Browser reassignment from Maya to Noah updates the details and list; reload
+  preserves Noah. A direct SQL read confirms `assigned_user_id = 2` while the
+  case status remains `OPEN`.
+- A temporary localhost QA proxy outside the repository verifies user loading,
+  disabled controls during save, success, failed-save selection retention,
+  user-list errors, and successful retries. No production fault hooks added.
+- Browser regressions verify status updates/list synchronization and activity
+  creation/reload persistence. Original case #1 assignee and status were
+  restored; a clearly labeled Day 5 regression note remains in local demo data.
+- Visual inspection confirms the assignee control fits the existing interface.
+- Day 6 has not been started.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -333,3 +399,10 @@ error states. Activities are displayed newest first.
 - Backend tests, frontend lint/build, direct PostgreSQL-backed API checks,
   browser creation, reload persistence, empty state, and list navigation have
   been verified.
+- Day 5 is complete.
+- `GET /api/users` lists existing users; `PATCH /api/cases/{id}/assignee`
+  validates and persists reassignment using the existing foreign key.
+- React provides a controlled assignee select with explicit save, useful
+  loading/error/retry states, and synchronized details/list query data.
+- Backend tests, frontend lint/build, Docker PostgreSQL API checks, browser
+  persistence/state checks, and status/activity regressions have been verified.

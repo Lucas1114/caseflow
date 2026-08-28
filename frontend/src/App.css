@@ -277,6 +277,21 @@
   margin-bottom: 30px;
 }
 
+.assignee-form {
+  margin-top: 20px;
+  color: #657087;
+  font-size: 0.82rem;
+}
+
+.assignee-form .status-form {
+  max-width: 680px;
+}
+
+.assignee-form__success {
+  margin: 10px 0 0;
+  color: #16704a;
+}
+
 .activity-form label {
   display: block;
   margin-bottom: 8px;

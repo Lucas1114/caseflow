@@ -20,6 +20,11 @@ details and case list views remain synchronized.
 Day 4 is complete. A user can add a persistent activity note from the case
 details page and see the case's activity history newest first. The form and
 timeline provide clear loading, empty, saving, success, and error states.
+Day 5 is complete. A user can reassign a case to another existing user from
+the details page. The assignment persists through
+`PATCH /api/cases/{id}/assignee`, with synchronized details/list views and
+loading, saving, success, and retryable error states. `GET /api/users` supplies
+the available users. No schema or dependency changes were required.
 
 ## Technology
 
@@ -88,6 +93,11 @@ The API can also be checked directly:
 curl http://localhost:8080/api/cases
 curl http://localhost:8080/api/cases/1
 curl http://localhost:8080/api/cases/1/activities
+curl http://localhost:8080/api/users
+curl -X PATCH \
+  -H 'Content-Type: application/json' \
+  -d '{"assignedUserId":2}' \
+  http://localhost:8080/api/cases/1/assignee
 curl -X PATCH \
   -H 'Content-Type: application/json' \
   -d '{"status":"IN_PROGRESS"}' \
@@ -114,6 +124,12 @@ cd frontend
 npm run lint
 npm run build
 ```
+
+Day 5 verification includes 19 backend tests, frontend lint/build,
+PostgreSQL-backed API checks, and browser checks for reassignment, list/reload
+consistency, loading/saving/error/retry states, and prior status/activity flows.
+Backend tests use repository mocks and do not require a running database;
+end-to-end verification uses Docker Compose PostgreSQL.
 
 ## Local Database
 

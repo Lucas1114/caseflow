@@ -1,6 +1,7 @@
 package com.caseflow.casework;
 
 import com.caseflow.user.User;
+import com.caseflow.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,9 +14,11 @@ import java.util.List;
 public class CaseService {
 
     private final CaseRepository caseRepository;
+    private final UserRepository userRepository;
 
-    public CaseService(CaseRepository caseRepository) {
+    public CaseService(CaseRepository caseRepository, UserRepository userRepository) {
         this.caseRepository = caseRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -38,6 +41,17 @@ public class CaseService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Case not found"));
 
         caseItem.updateStatus(status);
+        return toResponse(caseItem);
+    }
+
+    @Transactional
+    public CaseResponse updateAssignee(Long id, Long assignedUserId) {
+        Case caseItem = caseRepository.findByIdWithAssignedUser(id)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Case not found"));
+        User assignedUser = userRepository.findById(assignedUserId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        caseItem.updateAssignee(assignedUser);
         return toResponse(caseItem);
     }
 

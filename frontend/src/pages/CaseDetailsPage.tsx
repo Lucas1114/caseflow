@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { CaseActivitySection } from '../components/CaseActivitySection'
+import { CaseAssigneeForm } from '../components/CaseAssigneeForm'
 import {
   ApiError,
   getCase,
@@ -140,6 +141,7 @@ function CaseDetails({ caseItem }: CaseDetailsProps) {
             <p className="assignee__email">{caseItem.assignedUser.email}</p>
           </div>
         </div>
+        <CaseAssigneeForm key={caseItem.id} caseItem={caseItem} />
       </section>
 
       <CaseActivitySection caseId={caseItem.id} />
