@@ -19,6 +19,14 @@ export interface CaseActivity {
   createdAt: string
 }
 
+export interface CaseSummary {
+  total: number
+  open: number
+  inProgress: number
+  resolved: number
+  closed: number
+}
+
 export class ApiError extends Error {
   status: number
 
@@ -36,6 +44,19 @@ export async function getCases(): Promise<CaseItem[]> {
   }
 
   return response.json() as Promise<CaseItem[]>
+}
+
+export async function getCaseSummary(): Promise<CaseSummary> {
+  const response = await fetch('/api/cases/summary')
+
+  if (!response.ok) {
+    throw new ApiError(
+      `Unable to load workflow summary (${response.status})`,
+      response.status,
+    )
+  }
+
+  return response.json() as Promise<CaseSummary>
 }
 
 export async function getCase(caseId: number): Promise<CaseItem> {

@@ -25,6 +25,11 @@ public class CaseController {
         return caseService.findAll();
     }
 
+    @GetMapping("/summary")
+    public CaseSummaryResponse getSummary() {
+        return caseService.getSummary();
+    }
+
     @GetMapping("/{id}")
     public CaseResponse findById(@PathVariable Long id) {
         return caseService.findById(id);

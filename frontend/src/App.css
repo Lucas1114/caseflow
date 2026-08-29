@@ -31,6 +31,78 @@
   color: #657087;
 }
 
+.case-summary {
+  margin-bottom: 24px;
+  padding: 22px 24px;
+  border: 1px solid #e3e7ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgb(28 39 61 / 6%);
+}
+
+.case-summary h2 {
+  margin: 0 0 16px;
+  color: #283249;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.case-summary dl {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+}
+
+.case-summary dl div {
+  padding: 2px 18px;
+  border-left: 1px solid #edf0f5;
+}
+
+.case-summary dl div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.case-summary dt {
+  color: #7a8599;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.case-summary dd {
+  margin: 5px 0 0;
+  color: #172033;
+  font-size: 1.75rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.case-summary--state {
+  color: #657087;
+  text-align: center;
+}
+
+.case-summary--state p {
+  margin: 0;
+}
+
+.case-summary--error {
+  color: #9d2929;
+  background: #fff5f5;
+}
+
+.case-summary--error button {
+  margin-top: 10px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #3662d8;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .case-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -415,6 +487,23 @@
   .case-details__heading,
   .case-details__section {
     padding: 24px;
+  }
+
+  .case-summary dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .case-summary dl div,
+  .case-summary dl div:first-child {
+    padding: 12px;
+    border: 0;
+    border-radius: 10px;
+    background: #f7f9fc;
+  }
+
+  .case-summary dl div:first-child {
+    grid-column: 1 / -1;
   }
 
   .status-form__controls {

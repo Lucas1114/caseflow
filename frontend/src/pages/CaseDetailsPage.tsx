@@ -79,6 +79,7 @@ function CaseDetails({ caseItem }: CaseDetailsProps) {
     onSuccess: (updatedCase) => {
       queryClient.setQueryData(['cases', caseItem.id], updatedCase)
       void queryClient.invalidateQueries({ queryKey: ['cases'], exact: true })
+      void queryClient.invalidateQueries({ queryKey: ['cases', 'summary'] })
     },
   })
 

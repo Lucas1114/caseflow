@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getCases } from '../api/cases'
 import { CaseCard } from '../components/CaseCard'
+import { CaseSummaryPanel } from '../components/CaseSummaryPanel'
 
 export function CasesPage() {
   const casesQuery = useQuery({
@@ -19,6 +20,8 @@ export function CasesPage() {
           </p>
         </div>
       </header>
+
+      <CaseSummaryPanel />
 
       {casesQuery.isPending && (
         <p className="state-message" role="status">

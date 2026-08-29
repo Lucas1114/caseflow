@@ -356,6 +356,70 @@ and invalidate the case list after success.
 - Visual inspection confirms the assignee control fits the existing interface.
 - Day 6 has not been started.
 
+## Day 6 Approved Scope
+
+Day 6 adds a compact workflow summary above the case list. It shows the total
+number of cases and the count in each existing workflow status so an operator
+can understand the current queue at a glance.
+
+### API
+
+- `GET /api/cases/summary`: return `total`, `open`, `inProgress`, `resolved`,
+  and `closed` counts calculated from PostgreSQL.
+- Return zero for statuses that have no cases.
+
+### Completion Criterion
+
+```text
+User opens /cases
+  -> React requests GET /api/cases/summary
+  -> Spring Boot runs a grouped status-count query
+  -> PostgreSQL calculates the current totals
+  -> React displays total and per-status counts
+  -> changing a case status and returning to /cases shows refreshed counts
+```
+
+The summary must show clear loading and retryable error states without hiding
+a successfully loaded case list.
+
+### Day 6 Implementation Boundaries
+
+- Add one grouped repository query, a small response contract, a read-only
+  service method, controller endpoint, and focused tests.
+- Add a typed frontend request and a small summary panel above the existing
+  case grid.
+- Invalidate the summary after a successful status mutation.
+- Reuse the current schema, dependencies, enum, routing, and query architecture;
+  no database migration is needed. PostgreSQL remains Docker Compose-only.
+- Preserve Day 1 through Day 5 behavior. Do not add charts, dashboards,
+  assignee metrics, search/filtering/sorting, pagination, due dates, priorities,
+  case creation/editing, authentication, dependencies, or any Day 7 work.
+
+### Day 6 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Implement and test the workflow summary API.
+3. [x] Add the typed summary query, panel, and cache synchronization.
+4. [x] Verify PostgreSQL-backed counts, UI states, and regressions.
+5. [x] Synchronize documentation for the Day 6 commit and push handoff.
+
+### Day 6 Verification (2026-08-29)
+
+- 21 backend tests pass. New tests cover the summary JSON contract, total
+  calculation, per-status mapping, and zero values for missing status groups.
+- Frontend lint and production build pass; no frontend test dependency added.
+- Docker Compose PostgreSQL and Flyway confirm schema version 2 with no new
+  migration. The summary endpoint returns total 3 with one open, one in
+  progress, one resolved, and zero closed, matching a direct grouped SQL read.
+- Browser checks confirm the summary's success, error, and successful retry
+  states, plus readable desktop and mobile layouts.
+- Changing case #1 from open to closed updates the case list summary to zero
+  open and one closed. Restoring it to open restores the original counts.
+- Existing case list/detail, user listing, assignee, and activity endpoints
+  remain operational. Case #1 is restored to its original `OPEN` status and
+  Maya Chen assignment; existing activity data was not changed.
+- Day 7 has not been started.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -406,3 +470,11 @@ and invalidate the case list after success.
   loading/error/retry states, and synchronized details/list query data.
 - Backend tests, frontend lint/build, Docker PostgreSQL API checks, browser
   persistence/state checks, and status/activity regressions have been verified.
+- Day 6 is complete.
+- `GET /api/cases/summary` uses a grouped PostgreSQL query and returns the total
+  and a zero-safe count for every existing workflow status.
+- React displays the independent summary above the case grid with loading,
+  error/retry, responsive, and status-mutation cache refresh behavior.
+- Backend tests, frontend lint/build, grouped SQL comparison, API checks,
+  browser state/refresh checks, and Day 1 through Day 5 regressions have been
+  verified.

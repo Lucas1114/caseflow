@@ -25,6 +25,10 @@ the details page. The assignment persists through
 `PATCH /api/cases/{id}/assignee`, with synchronized details/list views and
 loading, saving, success, and retryable error states. `GET /api/users` supplies
 the available users. No schema or dependency changes were required.
+Day 6 is complete. The case list now includes a workflow summary backed by
+`GET /api/cases/summary`, showing the total and counts for every existing case
+status. The summary has independent loading and retryable error states and
+refreshes after a status update. No schema or dependency changes were required.
 
 ## Technology
 
@@ -91,6 +95,7 @@ The API can also be checked directly:
 
 ```bash
 curl http://localhost:8080/api/cases
+curl http://localhost:8080/api/cases/summary
 curl http://localhost:8080/api/cases/1
 curl http://localhost:8080/api/cases/1/activities
 curl http://localhost:8080/api/users
@@ -125,9 +130,10 @@ npm run lint
 npm run build
 ```
 
-Day 5 verification includes 19 backend tests, frontend lint/build,
-PostgreSQL-backed API checks, and browser checks for reassignment, list/reload
-consistency, loading/saving/error/retry states, and prior status/activity flows.
+Day 6 verification includes 21 backend tests, frontend lint/build, a direct
+PostgreSQL grouped-count comparison, and browser checks for the summary's
+desktop/mobile rendering, error/retry states, status-change refresh,
+and prior list/detail/assignee/activity flows.
 Backend tests use repository mocks and do not require a running database;
 end-to-end verification uses Docker Compose PostgreSQL.
 

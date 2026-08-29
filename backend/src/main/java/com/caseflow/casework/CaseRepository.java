@@ -14,6 +14,13 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
     @EntityGraph(attributePaths = "assignedUser")
     List<Case> findAll();
 
+    @Query("""
+            select new com.caseflow.casework.CaseStatusCount(caseItem.status, count(caseItem))
+            from Case caseItem
+            group by caseItem.status
+            """)
+    List<CaseStatusCount> countByStatus();
+
     @EntityGraph(attributePaths = "assignedUser")
     @Query("select caseItem from Case caseItem where caseItem.id = :id")
     Optional<Case> findByIdWithAssignedUser(@Param("id") Long id);

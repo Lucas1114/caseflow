@@ -9,6 +9,8 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CaseService {
@@ -26,6 +28,25 @@ public class CaseService {
         return caseRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CaseSummaryResponse getSummary() {
+        Map<CaseStatus, Long> counts = caseRepository.countByStatus().stream()
+                .collect(Collectors.toMap(CaseStatusCount::status, CaseStatusCount::count));
+
+        long open = counts.getOrDefault(CaseStatus.OPEN, 0L);
+        long inProgress = counts.getOrDefault(CaseStatus.IN_PROGRESS, 0L);
+        long resolved = counts.getOrDefault(CaseStatus.RESOLVED, 0L);
+        long closed = counts.getOrDefault(CaseStatus.CLOSED, 0L);
+
+        return new CaseSummaryResponse(
+                open + inProgress + resolved + closed,
+                open,
+                inProgress,
+                resolved,
+                closed
+        );
     }
 
     @Transactional(readOnly = true)
