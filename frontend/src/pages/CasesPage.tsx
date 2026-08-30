@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import { getCases } from '../api/cases'
 import { CaseCard } from '../components/CaseCard'
 import { CaseSummaryPanel } from '../components/CaseSummaryPanel'
@@ -19,6 +20,9 @@ export function CasesPage() {
             Review active work and the people responsible for each case.
           </p>
         </div>
+        <Link className="primary-link" to="/cases/new">
+          New case
+        </Link>
       </header>
 
       <CaseSummaryPanel />

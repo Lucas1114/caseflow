@@ -30,6 +30,15 @@ public class CaseService {
                 .toList();
     }
 
+    @Transactional
+    public CaseResponse create(String title, Long assignedUserId) {
+        User assignedUser = userRepository.findById(assignedUserId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+        Case caseItem = new Case(title.trim(), CaseStatus.OPEN, assignedUser);
+
+        return toResponse(caseRepository.save(caseItem));
+    }
+
     @Transactional(readOnly = true)
     public CaseSummaryResponse getSummary() {
         Map<CaseStatus, Long> counts = caseRepository.countByStatus().stream()

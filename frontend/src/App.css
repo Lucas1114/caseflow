@@ -5,6 +5,10 @@
 }
 
 .page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 36px;
 }
 
@@ -134,10 +138,25 @@
 
 .case-card__link,
 .back-link,
-.state-message__link {
+.state-message__link,
+.case-form__actions a {
   color: #2454c6;
   font-weight: 700;
   text-decoration: none;
+}
+
+.primary-link {
+  flex: none;
+  padding: 11px 17px;
+  border-radius: 9px;
+  color: #ffffff;
+  background: #3662d8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.primary-link:hover {
+  background: #294fb7;
 }
 
 .case-card__link {
@@ -474,6 +493,124 @@
   font-size: 0.76rem;
 }
 
+.app-shell--form {
+  max-width: 760px;
+}
+
+.case-form-card {
+  overflow: hidden;
+  border: 1px solid #e3e7ef;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgb(28 39 61 / 6%);
+}
+
+.case-form-card header,
+.case-form {
+  padding: 32px 34px;
+}
+
+.case-form-card header {
+  border-bottom: 1px solid #edf0f5;
+}
+
+.case-form-card h1 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  letter-spacing: -0.04em;
+}
+
+.case-form-card header > p:last-child {
+  margin: 12px 0 0;
+  color: #657087;
+}
+
+.case-form {
+  display: grid;
+  gap: 24px;
+}
+
+.case-form__field label {
+  display: block;
+  margin-bottom: 8px;
+  color: #283249;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.case-form__field input,
+.case-form__field select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cfd6e2;
+  border-radius: 8px;
+  color: #283249;
+  background: #ffffff;
+}
+
+.case-form__field input:focus,
+.case-form__field select:focus {
+  border-color: #3662d8;
+  outline: 3px solid rgb(54 98 216 / 15%);
+}
+
+.case-form__hint {
+  display: block;
+  margin-top: 7px;
+  color: #8490a4;
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.case-form__state {
+  margin: 0;
+  padding: 14px;
+  border-radius: 8px;
+  color: #657087;
+  background: #f7f9fc;
+}
+
+.case-form__state p {
+  margin: 0 0 10px;
+}
+
+.case-form__state button,
+.case-form__actions button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #3662d8;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.case-form__state--error,
+.case-form__error {
+  color: #9d2929;
+}
+
+.case-form__error {
+  margin: 0;
+  font-size: 0.84rem;
+}
+
+.case-form__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.case-form__actions button:disabled,
+.case-form__field input:disabled,
+.case-form__field select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @media (max-width: 600px) {
   .app-shell {
     width: min(100% - 28px, 1120px);
@@ -482,6 +619,21 @@
 
   .case-details__heading {
     flex-direction: column;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .primary-link {
+    width: 100%;
+    text-align: center;
+  }
+
+  .case-form-card header,
+  .case-form {
+    padding: 24px;
   }
 
   .case-details__heading,

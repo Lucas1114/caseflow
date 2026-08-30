@@ -27,6 +27,11 @@ export interface CaseSummary {
   closed: number
 }
 
+export interface CreateCaseInput {
+  title: string
+  assignedUserId: number
+}
+
 export class ApiError extends Error {
   status: number
 
@@ -44,6 +49,23 @@ export async function getCases(): Promise<CaseItem[]> {
   }
 
   return response.json() as Promise<CaseItem[]>
+}
+
+export async function createCase(input: CreateCaseInput): Promise<CaseItem> {
+  const response = await fetch('/api/cases', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  })
+
+  if (!response.ok) {
+    const message = response.status === 404
+      ? 'The selected user no longer exists. Reload the assignee list and try again.'
+      : `Unable to create case (${response.status}). Please try again.`
+    throw new ApiError(message, response.status)
+  }
+
+  return response.json() as Promise<CaseItem>
 }
 
 export async function getCaseSummary(): Promise<CaseSummary> {

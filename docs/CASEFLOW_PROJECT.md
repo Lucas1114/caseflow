@@ -420,6 +420,85 @@ a successfully loaded case list.
   Maya Chen assignment; existing activity data was not changed.
 - Day 7 has not been started.
 
+## Day 7 Approved Scope
+
+Day 7 completes the sprint with case intake. An operator can create a case,
+assign it to an existing user, and continue work from the new case's details
+page. New cases always begin in the `OPEN` workflow status.
+
+### API
+
+- `POST /api/cases`: validate and persist a new case.
+- Accept a nonblank `title` of at most 200 characters and a positive,
+  non-null `assignedUserId`.
+- Trim the title, set the status to `OPEN` on the server, and return the
+  existing `CaseResponse` with HTTP `201`.
+- Return HTTP `400` for invalid input and `404` when the selected user does
+  not exist.
+
+### Completion Criterion
+
+```text
+User selects New case on /cases
+  -> React loads existing assignees
+  -> user enters a title and selects an assignee
+  -> React sends POST /api/cases
+  -> Spring Boot validates and persists an OPEN case
+  -> PostgreSQL stores the case
+  -> React navigates to /cases/{newId}
+  -> the details page displays the new case
+  -> returning to /cases shows the case and refreshed summary
+```
+
+The form must show clear assignee loading, error, empty, retry, validation,
+submitting, and creation-error states. Failed submissions preserve entered
+values, and reloading the successful result must show the persisted case.
+
+### Day 7 Implementation Boundaries
+
+- Add a small validated creation request, transactional service method,
+  controller endpoint, and focused tests.
+- Add a typed frontend request, `/cases/new` route, list-page action, and a
+  controlled native form for title and existing assignee.
+- Seed the new detail cache and invalidate the case list and summary after
+  success before navigating to the new details page.
+- Reuse the current table, foreign key, response contracts, dependencies, and
+  architecture; no database migration is needed. PostgreSQL remains Docker
+  Compose-only.
+- Preserve Day 1 through Day 6 behavior. Do not add title editing, selectable
+  initial status, user creation, unassigned cases, descriptions, priorities,
+  due dates, search/filtering/sorting, pagination, deletion, bulk actions,
+  attachments, notifications, automatic activities, authentication, new
+  dependencies, deployment, or CI/CD work.
+
+### Day 7 Milestones
+
+1. [x] Document the approved scope and completion criterion.
+2. [x] Implement and test case creation API.
+3. [x] Add the typed creation request, route, form, and cache synchronization.
+4. [x] Verify persistence, UI states, responsive behavior, and regressions.
+5. [x] Synchronize final documentation for the Day 7 commit and push handoff.
+
+### Day 7 Verification (2026-08-30)
+
+- 25 backend tests pass. New tests cover HTTP `201`, trimmed title persistence,
+  server-owned `OPEN` status, assignee mapping, invalid titles and assignee
+  IDs, and a missing user without persistence.
+- Frontend lint and production build pass; no frontend test dependency added.
+- Docker Compose PostgreSQL and Flyway confirm schema version 2 with no new
+  migration. Direct SQL confirms created titles, statuses, and assignee foreign
+  keys match the API and browser submissions.
+- API checks confirm successful creation plus expected `400` and `404`
+  responses. Status and assignee mutations, user listing, activity listing,
+  case details, and summary counts remain operational.
+- Browser checks confirm disabled/valid form states, successful creation and
+  details navigation, reload persistence, list/summary refresh, readable
+  desktop/mobile layouts, and successful recovery from an assignee-list error.
+- Two clearly labeled verification cases were removed after testing. The
+  database is restored to the original three cases and six existing activity
+  rows. Case #1 is `OPEN` and assigned to Maya Chen.
+- The seven-day CaseFlow portfolio sprint is complete.
+
 ## Working Milestones
 
 1. [x] Establish repository rules and project documentation.
@@ -478,3 +557,12 @@ a successfully loaded case list.
 - Backend tests, frontend lint/build, grouped SQL comparison, API checks,
   browser state/refresh checks, and Day 1 through Day 5 regressions have been
   verified.
+- Day 7 is complete.
+- `POST /api/cases` validates and persists a trimmed title, an existing
+  assignee, and a server-owned initial `OPEN` status with HTTP `201`.
+- React provides a responsive `/cases/new` intake form with assignee
+  loading/error/empty/retry states, controlled validation, preserved input on
+  creation errors, success navigation, and list/summary cache refresh.
+- Backend tests, frontend lint/build, PostgreSQL/API checks, browser creation,
+  error recovery, responsive rendering, and Day 1 through Day 6 regressions
+  have been verified. The seven-day sprint is complete.

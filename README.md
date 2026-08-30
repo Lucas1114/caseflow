@@ -29,6 +29,10 @@ Day 6 is complete. The case list now includes a workflow summary backed by
 `GET /api/cases/summary`, showing the total and counts for every existing case
 status. The summary has independent loading and retryable error states and
 refreshes after a status update. No schema or dependency changes were required.
+Day 7 is complete. An operator can create an `OPEN` case from `/cases/new`,
+assign it to an existing user, and continue directly on the new details page.
+The case list and workflow summary refresh after creation. No schema or
+dependency changes were required.
 
 ## Technology
 
@@ -99,6 +103,10 @@ curl http://localhost:8080/api/cases/summary
 curl http://localhost:8080/api/cases/1
 curl http://localhost:8080/api/cases/1/activities
 curl http://localhost:8080/api/users
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Investigate delayed customer refund","assignedUserId":1}' \
+  http://localhost:8080/api/cases
 curl -X PATCH \
   -H 'Content-Type: application/json' \
   -d '{"assignedUserId":2}' \
@@ -130,10 +138,10 @@ npm run lint
 npm run build
 ```
 
-Day 6 verification includes 21 backend tests, frontend lint/build, a direct
-PostgreSQL grouped-count comparison, and browser checks for the summary's
-desktop/mobile rendering, error/retry states, status-change refresh,
-and prior list/detail/assignee/activity flows.
+Day 7 verification includes 25 backend tests, frontend lint/build, direct
+PostgreSQL persistence checks, API validation and regression checks, and
+browser checks for creation, navigation, list/summary refresh, desktop/mobile
+rendering, error recovery, and prior list/detail/assignee/activity flows.
 Backend tests use repository mocks and do not require a running database;
 end-to-end verification uses Docker Compose PostgreSQL.
 

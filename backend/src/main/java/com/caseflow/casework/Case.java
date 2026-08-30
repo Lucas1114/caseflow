@@ -35,6 +35,12 @@ public class Case {
     protected Case() {
     }
 
+    public Case(String title, CaseStatus status, User assignedUser) {
+        this.title = title;
+        this.status = status;
+        this.assignedUser = assignedUser;
+    }
+
     public Long getId() {
         return id;
     }
