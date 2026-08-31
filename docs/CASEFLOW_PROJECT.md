@@ -566,3 +566,19 @@ values, and reloading the successful result must show the persisted case.
 - Backend tests, frontend lint/build, PostgreSQL/API checks, browser creation,
   error recovery, responsive rendering, and Day 1 through Day 6 regressions
   have been verified. The seven-day sprint is complete.
+
+## Portfolio Closeout (2026-09-01)
+
+- Reframed the root README around product capabilities, architecture, API
+  contracts, engineering decisions, local setup, and verification evidence.
+- Added real desktop, workflow-details, and mobile-intake screenshots captured
+  from a clean local clone using the seeded PostgreSQL data.
+- Kept the repository unlicensed because it is published for portfolio review,
+  not as an open-source distribution.
+- Repeated clean-clone verification: all 25 backend tests pass; frontend
+  dependency installation, lint, TypeScript compilation, and production build
+  pass; Flyway initializes an empty PostgreSQL 18.6 schema; and the full browser
+  mutation flow persists across reload and refreshes the list and summary.
+- No product feature, dependency, data model, endpoint, or application
+  architecture changed during portfolio packaging. Deployment, repository
+  visibility, GitHub metadata, and profile pinning remain separate decisions.

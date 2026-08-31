@@ -1,66 +1,93 @@
 # CaseFlow
 
-CaseFlow is a full-stack case-management portfolio project built as a focused 7-day sprint. It uses React and TypeScript on the frontend, Spring Boot and Java on the backend, and PostgreSQL through Docker.
+CaseFlow is a full-stack case-management workflow built to demonstrate a
+complete React-to-PostgreSQL product slice. Operators can create and assign
+cases, move work through a defined status lifecycle, record activity, and see
+database-backed queue totals.
 
-## Current Status
+![CaseFlow case list and workflow summary](docs/images/caseflow-overview.jpg)
 
-Day 1 is complete. The first vertical slice is verified end to end:
+## Features
 
-```text
-React -> GET /api/cases -> Spring Boot -> PostgreSQL -> JSON -> React rendering
+- Create a case for an existing user; the server owns the initial `OPEN` status.
+- Review case details and move work through open, in-progress, resolved, and
+  closed states.
+- Reassign a case while keeping list and detail views synchronized.
+- Add persistent activity notes and display the newest activity first.
+- Calculate total and per-status workflow counts in PostgreSQL.
+- Handle loading, empty, validation, error, retry, saving, and success states in
+  the interface.
+
+## Interface
+
+| Case workflow | Responsive case intake |
+| --- | --- |
+| ![Case details with status, assignee, and activity controls](docs/images/caseflow-details.jpg) | ![CaseFlow new-case form on a mobile viewport](docs/images/caseflow-intake-mobile.jpg) |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    Operator[Operator] --> Router[React Router pages]
+
+    subgraph Frontend[React + TypeScript frontend]
+        Router --> Query[TanStack Query]
+        Query --> Client[Typed native fetch client]
+    end
+
+    Client -->|JSON over /api| Controllers[Spring MVC controllers]
+
+    subgraph Backend[Spring Boot backend]
+        Controllers --> Services[Transactional services<br/>Bean Validation]
+        Services --> Repositories[Spring Data JPA<br/>entity graphs and aggregation]
+    end
+
+    Repositories --> Database[(PostgreSQL)]
+    Flyway[Flyway migrations] --> Database
 ```
 
-The current application displays seeded cases and each case's assigned user.
-Day 2 is complete. Each case links to a read-only details page at
-`/cases/:caseId`, backed by `GET /api/cases/{id}`. Missing cases return HTTP
-`404` and display a clear not-found state in React.
-Day 3 is complete. A user can update a case's workflow status from the details
-page. The change is persisted through `PATCH /api/cases/{id}/status`, and the
-details and case list views remain synchronized.
-Day 4 is complete. A user can add a persistent activity note from the case
-details page and see the case's activity history newest first. The form and
-timeline provide clear loading, empty, saving, success, and error states.
-Day 5 is complete. A user can reassign a case to another existing user from
-the details page. The assignment persists through
-`PATCH /api/cases/{id}/assignee`, with synchronized details/list views and
-loading, saving, success, and retryable error states. `GET /api/users` supplies
-the available users. No schema or dependency changes were required.
-Day 6 is complete. The case list now includes a workflow summary backed by
-`GET /api/cases/summary`, showing the total and counts for every existing case
-status. The summary has independent loading and retryable error states and
-refreshes after a status update. No schema or dependency changes were required.
-Day 7 is complete. An operator can create an `OPEN` case from `/cases/new`,
-assign it to an existing user, and continue directly on the new details page.
-The case list and workflow summary refresh after creation. No schema or
-dependency changes were required.
+The repository intentionally remains one frontend, one backend, and one
+PostgreSQL service. API records keep persistence entities out of the wire
+contract, service methods define transaction boundaries, and Flyway owns the
+database schema.
+
+### Data synchronization
+
+TanStack Query keeps related views consistent after mutations:
+
+- Status and assignee updates replace the current detail cache and invalidate
+  the case list.
+- Status changes also invalidate the workflow summary.
+- Case creation seeds the new detail cache, invalidates the list and summary,
+  and then navigates to the new case.
+- New activity is inserted at the beginning of the cached activity timeline.
+
+## API
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/cases` | List cases and their assigned users |
+| `POST` | `/api/cases` | Validate and create an open case |
+| `GET` | `/api/cases/summary` | Return total and per-status counts |
+| `GET` | `/api/cases/{id}` | Return one case or `404` |
+| `PATCH` | `/api/cases/{id}/status` | Validate and persist a status change |
+| `PATCH` | `/api/cases/{id}/assignee` | Reassign a case to an existing user |
+| `GET` | `/api/cases/{id}/activities` | List activity newest first |
+| `POST` | `/api/cases/{id}/activities` | Validate and persist an activity note |
+| `GET` | `/api/users` | List users available for assignment |
 
 ## Technology
 
-- React 19, TypeScript, Vite
-- React Router and TanStack Query
-- Native `fetch()` for API requests
-- Java 25 and Spring Boot 4.1.1
-- Spring Web MVC, Spring Data JPA, Bean Validation, and Flyway
-- PostgreSQL 18.6 through Docker Compose
-- Maven and npm
+| Layer | Technology |
+| --- | --- |
+| Frontend | React 19, TypeScript 6, Vite, React Router, TanStack Query, native `fetch()` |
+| Backend | Java 25, Spring Boot 4, Spring Web MVC, Spring Data JPA, Bean Validation |
+| Data | PostgreSQL 18, Flyway, Docker Compose |
+| Verification | JUnit, Mockito, MockMvc, Oxlint, TypeScript compiler, Vite production build |
 
-## Repository Structure
+## Run locally
 
-```text
-caseflow/
-├── backend/             # Spring Boot API and Flyway migrations
-├── frontend/            # React and TypeScript client
-├── docs/
-│   └── CASEFLOW_PROJECT.md
-├── docker-compose.yml   # PostgreSQL only
-├── README.md
-├── AGENTS.md
-└── .gitignore
-```
-
-See [`docs/CASEFLOW_PROJECT.md`](docs/CASEFLOW_PROJECT.md) for the approved scope and project decisions.
-
-## Prerequisites
+### Prerequisites
 
 - Java 25
 - Maven 3.9+
@@ -68,97 +95,100 @@ See [`docs/CASEFLOW_PROJECT.md`](docs/CASEFLOW_PROJECT.md) for the approved scop
 - npm 11+
 - Docker and Docker Compose
 
-PostgreSQL runs only through Docker Compose. A local PostgreSQL installation is not required.
+PostgreSQL runs through Docker Compose; no local PostgreSQL installation is
+required.
 
-## Run Locally
+### 1. Start PostgreSQL
 
-Start PostgreSQL from the repository root:
+From the repository root:
 
 ```bash
 docker compose up -d --wait postgres
 ```
 
-Start the backend in a second terminal:
+### 2. Start the backend
+
+In a second terminal:
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-Start the frontend in a third terminal:
+Flyway creates and seeds the schema on the first run. The API listens on
+`http://localhost:8080`.
+
+### 3. Start the frontend
+
+In a third terminal:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:5173/cases](http://localhost:5173/cases). Vite proxies `/api` requests to the backend at `http://localhost:8080`.
+Open [http://localhost:5173/cases](http://localhost:5173/cases). During local
+development, Vite proxies `/api` requests to the Spring Boot service.
 
-The API can also be checked directly:
+### Stop PostgreSQL
 
 ```bash
-curl http://localhost:8080/api/cases
-curl http://localhost:8080/api/cases/summary
-curl http://localhost:8080/api/cases/1
-curl http://localhost:8080/api/cases/1/activities
-curl http://localhost:8080/api/users
-curl -X POST \
-  -H 'Content-Type: application/json' \
-  -d '{"title":"Investigate delayed customer refund","assignedUserId":1}' \
-  http://localhost:8080/api/cases
-curl -X PATCH \
-  -H 'Content-Type: application/json' \
-  -d '{"assignedUserId":2}' \
-  http://localhost:8080/api/cases/1/assignee
-curl -X PATCH \
-  -H 'Content-Type: application/json' \
-  -d '{"status":"IN_PROGRESS"}' \
-  http://localhost:8080/api/cases/1/status
-curl -X POST \
-  -H 'Content-Type: application/json' \
-  -d '{"note":"Customer supplied the missing document."}' \
-  http://localhost:8080/api/cases/1/activities
+docker compose down
 ```
 
-## Development Checks
+This stops the container without deleting the named database volume.
 
-Backend:
+## Verification
+
+Run the automated checks from their respective project directories:
 
 ```bash
 cd backend
 mvn test
 ```
 
-Frontend:
-
 ```bash
 cd frontend
+npm ci
 npm run lint
 npm run build
 ```
 
-Day 7 verification includes 25 backend tests, frontend lint/build, direct
-PostgreSQL persistence checks, API validation and regression checks, and
-browser checks for creation, navigation, list/summary refresh, desktop/mobile
-rendering, error recovery, and prior list/detail/assignee/activity flows.
-Backend tests use repository mocks and do not require a running database;
-end-to-end verification uses Docker Compose PostgreSQL.
+A clean-clone verification on 1 September 2026 confirmed:
 
-## Local Database
+- 25 backend tests pass with no failures or errors.
+- Frontend dependency installation, lint, TypeScript compilation, and the Vite
+  production build pass.
+- PostgreSQL 18.6 starts through Docker Compose and Flyway applies both
+  migrations to an empty schema.
+- The browser flow creates a case, changes its status and assignee, adds an
+  activity, preserves all three changes after reload, and refreshes the case
+  list and workflow summary.
+- The list, details, and intake views remain readable at desktop and mobile
+  breakpoints.
 
-The development connection is:
+The backend suite uses focused MockMvc and service tests with mocked
+repositories. The frontend currently relies on lint, production build, and
+manual browser verification rather than an automated browser-test dependency.
 
-- host: `localhost`
-- port: `5432`
-- database: `caseflow`
-- username: `caseflow`
-- password: `caseflow`
+## Project scope
 
-These credentials are intentionally simple and are for local development only. Database files persist in the `caseflow-postgres-data` named volume.
+CaseFlow was delivered as a focused seven-day portfolio sprint. Authentication,
+search, pagination, deployment infrastructure, and other production-platform
+concerns were deliberately excluded so the project could emphasize a complete,
+inspectable full-stack workflow without architectural overhead.
 
-Stop the application database without deleting its data:
+See [the project record](docs/CASEFLOW_PROJECT.md) for the daily scope,
+decisions, and verification history.
 
-```bash
-docker compose down
+## Repository structure
+
+```text
+caseflow/
+├── backend/             # Spring Boot API, tests, and Flyway migrations
+├── frontend/            # React and TypeScript client
+├── docs/                # Project record and portfolio screenshots
+├── docker-compose.yml   # Local PostgreSQL service
+└── README.md
 ```
