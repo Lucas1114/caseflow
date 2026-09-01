@@ -26,11 +26,12 @@ database-backed queue totals.
 
 ## Demo
 
-[![Watch the CaseFlow workflow demo](docs/images/caseflow-social-preview.png)](docs/media/caseflow-demo.mp4)
+![CaseFlow workflow demo](docs/media/caseflow-demo.gif)
 
 Watch the 22-second workflow demonstration: create and assign a case, update
 its status, reassign ownership, add an activity note, and return to the queue
-to see the database-backed summary refresh.
+to see the database-backed summary refresh. A higher-quality
+[MP4 version](docs/media/caseflow-demo.mp4?raw=1) is also available to download.
 
 ## Architecture
 
