@@ -24,6 +24,9 @@ frontend/.vite/
 .env.*
 !.env.example
 
+# Local project collaboration context
+/.project.md
+
 # Test and coverage output
 coverage/
 

@@ -188,16 +188,13 @@ search, pagination, deployment infrastructure, and other production-platform
 concerns were deliberately excluded so the project could emphasize a complete,
 inspectable full-stack workflow without architectural overhead.
 
-See [the project record](docs/CASEFLOW_PROJECT.md) for the daily scope,
-decisions, and verification history.
-
 ## Repository structure
 
 ```text
 caseflow/
 ├── backend/             # Spring Boot API, tests, and Flyway migrations
 ├── frontend/            # React and TypeScript client
-├── docs/                # Project record and portfolio screenshots
+├── docs/                # Portfolio screenshots and demo media
 ├── docker-compose.yml   # Local PostgreSQL service
 └── README.md
 ```
