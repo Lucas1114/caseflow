@@ -24,6 +24,14 @@ database-backed queue totals.
 | --- | --- |
 | ![Case details with status, assignee, and activity controls](docs/images/caseflow-details.jpg) | ![CaseFlow new-case form on a mobile viewport](docs/images/caseflow-intake-mobile.jpg) |
 
+## Demo
+
+[![Watch the CaseFlow workflow demo](docs/images/caseflow-social-preview.png)](docs/media/caseflow-demo.mp4)
+
+Watch the 22-second workflow demonstration: create and assign a case, update
+its status, reassign ownership, add an activity note, and return to the queue
+to see the database-backed summary refresh.
+
 ## Architecture
 
 ```mermaid
