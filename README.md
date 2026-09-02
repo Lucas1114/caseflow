@@ -183,10 +183,10 @@ manual browser verification rather than an automated browser-test dependency.
 
 ## Project scope
 
-CaseFlow was delivered as a focused seven-day portfolio sprint. Authentication,
-search, pagination, deployment infrastructure, and other production-platform
-concerns were deliberately excluded so the project could emphasize a complete,
-inspectable full-stack workflow without architectural overhead.
+CaseFlow was designed as a deliberately scoped portfolio project.
+Authentication, search, pagination, deployment infrastructure, and other
+production-platform concerns were excluded so the implementation could remain
+focused on a complete, inspectable full-stack workflow.
 
 ## Repository structure
 
