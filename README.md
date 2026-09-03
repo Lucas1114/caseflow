@@ -26,6 +26,8 @@ database-backed queue totals.
 
 ## Demo
 
+**[Open the live CaseFlow application](https://caseflow-frontend-production.up.railway.app)**
+
 ![CaseFlow workflow demo](docs/media/caseflow-demo.gif)
 
 Watch the 22-second workflow demonstration: create and assign a case, update
@@ -60,6 +62,20 @@ PostgreSQL service. API records keep persistence entities out of the wire
 contract, service methods define transaction boundaries, and Flyway owns the
 database schema.
 
+### Deployment
+
+The live application runs as three Railway services:
+
+- Caddy serves the Vite production build, provides React Router SPA fallback,
+  and proxies `/api` over Railway's private network.
+- Spring Boot runs in a Java 25 container and exposes an Actuator health check.
+- Railway PostgreSQL stores application data, with Flyway applying schema
+  migrations during backend startup.
+
+Only the frontend has a public domain. The backend and database remain private,
+so browser requests stay same-origin and no database credentials are exposed to
+the client.
+
 ### Data synchronization
 
 TanStack Query keeps related views consistent after mutations:
@@ -92,6 +108,7 @@ TanStack Query keeps related views consistent after mutations:
 | Frontend | React 19, TypeScript 6, Vite, React Router, TanStack Query, native `fetch()` |
 | Backend | Java 25, Spring Boot 4, Spring Web MVC, Spring Data JPA, Bean Validation |
 | Data | PostgreSQL 18, Flyway, Docker Compose |
+| Deployment | Railway, Docker, Caddy, private service networking |
 | Verification | JUnit, Mockito, MockMvc, Oxlint, TypeScript compiler, Vite production build |
 
 ## Run locally
@@ -164,7 +181,7 @@ npm run lint
 npm run build
 ```
 
-A clean-clone verification on 1 September 2026 confirmed:
+A local and live deployment verification on 3 September 2026 confirmed:
 
 - 25 backend tests pass with no failures or errors.
 - Frontend dependency installation, lint, TypeScript compilation, and the Vite
@@ -176,6 +193,9 @@ A clean-clone verification on 1 September 2026 confirmed:
   list and workflow summary.
 - The list, details, and intake views remain readable at desktop and mobile
   breakpoints.
+- The Railway deployment passes frontend and backend health checks, serves
+  nested routes after a direct page refresh, and keeps the backend and database
+  on private networking.
 
 The backend suite uses focused MockMvc and service tests with mocked
 repositories. The frontend currently relies on lint, production build, and
@@ -184,16 +204,16 @@ manual browser verification rather than an automated browser-test dependency.
 ## Project scope
 
 CaseFlow was designed as a deliberately scoped portfolio project.
-Authentication, search, pagination, deployment infrastructure, and other
-production-platform concerns were excluded so the implementation could remain
-focused on a complete, inspectable full-stack workflow.
+Authentication, search, pagination, and broader commercial-product concerns
+were excluded so the implementation could remain focused on a complete,
+inspectable full-stack workflow.
 
 ## Repository structure
 
 ```text
 caseflow/
 ├── backend/             # Spring Boot API, tests, and Flyway migrations
-├── frontend/            # React and TypeScript client
+├── frontend/            # React client and production Caddy configuration
 ├── docs/                # Portfolio screenshots and demo media
 ├── docker-compose.yml   # Local PostgreSQL service
 └── README.md
