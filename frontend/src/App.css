@@ -35,6 +35,19 @@
   color: #657087;
 }
 
+.source-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #2454c6;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.source-link:hover {
+  text-decoration: underline;
+}
+
 .case-summary {
   margin-bottom: 24px;
   padding: 22px 24px;

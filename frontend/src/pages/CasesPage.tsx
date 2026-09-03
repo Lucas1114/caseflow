@@ -19,6 +19,14 @@ export function CasesPage() {
           <p className="page-description">
             Review active work and the people responsible for each case.
           </p>
+          <a
+            className="source-link"
+            href="https://github.com/Lucas1114/caseflow"
+            target="_blank"
+            rel="noreferrer"
+          >
+            View source on GitHub ↗
+          </a>
         </div>
         <Link className="primary-link" to="/cases/new">
           New case
